@@ -126,6 +126,14 @@
                       </tr>
 
                       <tr>
+                          <td class="fieldlabel text-left"></td>
+                          <td class="fieldlabel text-left"><?php echo $LANG['review_task_status_qry'] ?>:</td>
+                          <td class="fieldarea text-left"><label class="label label-success"><?php echo $review->ticketstatus; ?></label>&nbsp;<button class="btn btn-sm btn-info" onClick="window.open('addonmodules.php?module=review_responses&action=setstatus&id=<?php echo $review->ticket_id; ?>','setstatuswindow','width=400,height=300,top=100,left=100,scrollbars=yes')">Change Status</button></td>
+                          <td class="fieldlabel text-left"></td>
+                      </tr>
+
+
+                      <tr>
                           <td class="fieldlabel text-left" ></td>
                           <td class="fieldlabel text-left" ><?php echo $LANG['review_message'] ?>:</td>
                           <td class="fieldarea text-left" ><?php echo nl2br($review->message); ?></td>
@@ -174,6 +182,8 @@
                           <td class="fieldlabel text-left" ></td>
                       </tr>
 
+
+
                       <tr>
                           <td class="fieldlabel text-left" ></td>
                           <td class="fieldlabel text-left" ><?php echo $LANG['task_status_change'] ?>:</td>
@@ -198,6 +208,7 @@
                           <td class="fieldlabel text-left"></td>
                       </tr>
                       
+
 
                       <tr>
                           <td class="fieldlabel text-left"></td>

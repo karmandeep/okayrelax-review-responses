@@ -147,7 +147,7 @@ class Controller {
 									->leftjoin('review_responses_ticket_status_request', 'review_responses_ticket_status_request.review_responses_id', '=', 'review_responses.id')
 									->where('review_responses.id' , $id)
 									->where('review_responses.reviewer_id' , $reviewer_id)
-									->select('tbltickets.tid as tid' , 'tbltickets.title as title' , 'tblticketreplies.message as message' ,
+									->select('tbltickets.tid as tid' , 'tbltickets.title as title' , 'tbltickets.status as ticketstatus', 'tblticketreplies.message as message' ,
 											 'review_responses.id as id' , 'review_responses.admin_id as admin_id' ,
 											 'review_responses.tid as ticket_id' , 'review_responses.ticket_replies_id as ticket_response_id' , 
 											 'review_responses.status as status' , 'review_responses.notes as notes' ,'review_responses.userid as userid' ,
@@ -178,7 +178,7 @@ class Controller {
 			
 			
 			//ticket_id
-			
+			//tblticketstatuses
 			//echo '<pre>';
 			//print_r($review->ticket_id);
 			//exit;
@@ -339,6 +339,15 @@ class Controller {
 				
 				break;
 				
+				
+				case 'setstatus':
+				
+					$id = $_POST['id'];
+					echo $id; 
+					exit;
+				
+				break;
+				
 				default:
 				break;
 				
@@ -487,6 +496,31 @@ class Controller {
 		header("Location: addonmodules.php?module=review_responses#tab=4");
 		exit;
 
+	}
+
+	/**
+     * Show view.
+     *
+     * @param array $vars Module configuration parameters
+     *
+     * @return string
+     */
+	public function setstatus($vars) {
+		
+        $modulelink = $vars['modulelink']; // eg. addonmodules.php?module=addonmodule
+        $version = $vars['version']; // eg. 1.0
+        $LANG = $vars['_lang']; // an array of the currently loaded language variables
+		
+		$id = $_GET['id'];
+		
+		//tblticketstatuses
+		$tktstatuses = Capsule::table('tblticketstatuses')->get();
+		
+		//Get Ticket Present Status
+		$tktstatus = Capsule::table('tbltickets')->where('id' , $id)->select(['status'])->first();
+		
+		include('setstatus.php');
+		exit;
 	}
 
 	//Static Function
