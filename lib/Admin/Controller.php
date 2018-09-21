@@ -177,10 +177,16 @@ class Controller {
 										->get();
 			
 			
+			//ticket_id
+			
 			//echo '<pre>';
-			//print_r($review);
-			//print_r($messages);
+			//print_r($review->ticket_id);
 			//exit;
+			$status_change = Capsule::table('review_responses_ticket_status_request')	
+										->where('ticketid', $review->ticket_id)
+										->where('review_responses_id', 0)
+										->get();
+			
 			//Noe The Comments are Read.
 			Capsule::table('review_responses_replies')->where('admin_id' , $review->admin_id)->where('review_responses_id' , $review->id)->update(['msgstatus' => 1]);
 			
@@ -238,6 +244,12 @@ class Controller {
 												 'review_responses_replies.msgstatus as msgstatus', 
 												 'review_responses_replies.created_at as created_at',
 												 'review_responses_replies.updated_at as updated_at')
+										->get();
+
+
+			$status_change = Capsule::table('review_responses_ticket_status_request')	
+										->where('ticketid', $review->ticket_id)
+										->where('review_responses_id', 0)
 										->get();
 										
 			include('readonly.php');
@@ -461,6 +473,16 @@ class Controller {
 
 		
 		endif;
+
+		if(isset($_GET['mode'])):
+			
+			$mode = $_GET['mode'];
+			$review_responses_id = $_GET['review_responses_id'];
+			header("Location: addonmodules.php?module=review_responses&action=".$mode."&id=".$review_responses_id."&result=success");
+			exit;
+			//review
+		endif;
+
 
 		header("Location: addonmodules.php?module=review_responses#tab=4");
 		exit;

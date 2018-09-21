@@ -9,8 +9,42 @@
   <link href="//fonts.googleapis.com/css?family=Open+Sans:300,400,600" rel="stylesheet">
   <link href="templates/blend/css/all.min.css?v=adcb9b" rel="stylesheet" />
 
-  
-  
+  <script type="text/javascript">
+	
+	function check(id) {
+		
+		var r = confirm("Confirm Approval!");
+		if (r == true) {
+			
+			//alert(id);
+			//Lets Delete
+			window.location = "addonmodules.php?module=review_responses&id="+id+"&action=approvestatus&mode=review&review_responses_id="+<?php echo $review->id; ?>;
+			
+		} else {
+			
+			return false;			
+		} 
+	}
+	
+	
+	function decheck(id) {
+		
+		//alert(id);
+
+		var r = confirm("Confirm Rejection!");
+		if (r == true) {
+			
+			//Lets Delete
+			//window.location = "addonmodules.php?module=review_responses&id="+id+"&action=rejectstatus&mode=review";
+			window.location = "addonmodules.php?module=review_responses&id="+id+"&action=rejectstatus&mode=review&review_responses_id="+<?php echo $review->id; ?>;
+			
+		} else {
+			
+			return false;			
+		} 
+	}
+
+  </script>  
   <script type="text/javascript">
   	<?php if($review->status == 1): ?>
 	   window.opener.location.reload(false);	
@@ -57,9 +91,11 @@
       if(isset($_GET['result']) && $_GET['result'] === 'success'):
   ?>
       <script type="text/javascript">	
-          alert('Record Updated Successfully.'); 
-          window.opener.location.reload(false);
-          window.close();
+          
+		  //Don't Need this Here Let Them Close this.
+		  //alert('Record Updated Successfully.'); 
+          //window.opener.location.reload(false);
+          //window.close();
           
       </script>
   <?php	
@@ -235,6 +271,36 @@
           
           </form>
           
+
+          <form name="review" onSubmit="return false;" action="addonmodules.php?module=review_responses&action=submit" method="post">
+              <!--<input type="hidden" name="mode" value="setstatusonly">
+              <input type="hidden" name="reviewer_id" value="<?php echo $reviewer_id; ?>">
+              <input type="hidden" name="admin_id" value="0">
+              <input type="hidden" name="id" value="<?php echo $review->id; ?>">-->
+
+              <table class="form" width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tbody>
+                  	
+                   <tr>
+                      <td class=" text-left" colspan="4"> <h1><?php echo $LANG['review_msgs_statusonly'] ?><small><i>(Note: These are not associated with any Response from the VA)</i></small></h1></td>
+                   </tr>	
+                  <?php //approved ?>
+                  <?php if( count($status_change) > 0): ?> 
+                  	<?php foreach($status_change as $key => $value): ?>
+                          <tr>
+                              <td class="fieldlabel text-left" width="35%" ><small>By (<?php echo getAdminName($value->adminid); ?>) On [<?php echo fromMySQLDate($value->created_at,1); ?>]</small></td>
+                              <td class="fieldlabel text-left small" ><?php echo $LANG['review_msgs_status_qry']; ?>:</td>
+                              <td class="fieldarea text-left" ><label class="label <?php if($value->approved == 0): ?> label-default <?php elseif($value->approved == 1): ?> label-success <?php else: ?> label-danger <?php endif; ?>"><?php echo $value->status; ?></label></td>
+                              <td class="fieldarea text-right" ><?php if($value->approved == 0): ?><button onClick="return check(<?php echo $value->id; ?>)" class="btn btn-success"><i class="fa fa-check"></i> <?php echo $LANG['task_status_approve']; ?></button> <button onClick="return decheck(<?php echo $value->id; ?>)" class="btn btn-danger"><i class="fa fa-remove"></i> <?php echo $LANG['task_status_reject']; ?></button><?php elseif($value->approved == 1): ?><label class="label label-success">Approved</label><?php else: ?><label class="label label-danger">Rejected</label><?php endif; ?></td>
+                          </tr>
+                  	<?php endforeach; ?>
+                  <?php endif; ?>
+                   
+                  </tbody>
+              </table>    	
+          
+          </form>
+
           
       </div>
   </div>

@@ -292,9 +292,9 @@ function review_responses_clientarea($vars)
 
     // Dispatch and handle request here. What follows is a demonstration of one
     // possible way of handling this using a very basic dispatcher implementation.
-
+	*/
     $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
 
     $dispatcher = new ClientDispatcher();
-    return $dispatcher->dispatch($action, $vars);*/
+    return $dispatcher->dispatch($action, $vars);
 }

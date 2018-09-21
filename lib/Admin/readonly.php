@@ -157,6 +157,28 @@
           
           
           
+              <table class="form" width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tbody>
+                  	
+                   <tr>
+                      <td class=" text-left" colspan="4"> <h1><?php echo $LANG['review_msgs_statusonly'] ?><small><i>(Note: These are not associated with any Response from the VA)</i></small></h1></td>
+                   </tr>	
+                  <?php //approved ?>
+                  <?php if( count($status_change) > 0): ?> 
+                  	<?php foreach($status_change as $key => $value): ?>
+                          <tr>
+                              <td class="fieldlabel text-left" width="35%" ><small>By (<?php echo getAdminName($value->adminid); ?>) On [<?php echo fromMySQLDate($value->created_at,1); ?>]</small></td>
+                              <td class="fieldlabel text-left small" ><?php echo $LANG['review_msgs_status_qry']; ?>:</td>
+                              <td class="fieldarea text-left" ><label class="label <?php if($value->approved == 0): ?> label-default <?php elseif($value->approved == 1): ?> label-success <?php else: ?> label-danger <?php endif; ?>"><?php echo $value->status; ?></label></td>
+                              <td class="fieldlabel text-right" ></td>
+                          </tr>
+                  	<?php endforeach; ?>
+                  <?php endif; ?>
+                   
+                  </tbody>
+              </table>    	
+          
+          
       </div>
   </div>
 </body>
