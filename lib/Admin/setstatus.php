@@ -72,7 +72,7 @@
               <table class="form" width="100%" border="0" cellspacing="0" cellpadding="0">
                   <tbody>
                       <tr>
-                          <td class=" text-left" colspan="4"> <h1><?php echo $LANG['review_heading'] ?><small> <a href="#" onClick="window.open('tasks.php?action=view&id=<?php echo $review->ticket_id; ?>');" ><?php echo $tktstatus->tid; ?> - <?php echo $tktstatus->title; ?></a></small></h1></td>
+                          <td class=" text-left" colspan="4"> <h1><?php echo $LANG['review_heading'] ?><small> <a href="#" onClick="window.open('tasks.php?action=view&id=<?php echo $tktstatus->id; ?>');" ><?php echo $tktstatus->tid; ?> - <?php echo $tktstatus->title; ?></a></small></h1></td>
                       </tr>	
                       
 

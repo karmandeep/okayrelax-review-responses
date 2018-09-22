@@ -535,7 +535,7 @@ class Controller {
 		$tktstatuses = Capsule::table('tblticketstatuses')->get();
 		
 		//Get Ticket Present Status
-		$tktstatus = Capsule::table('tbltickets')->where('id' , $id)->select(['status' , 'title' , 'tid'])->first();
+		$tktstatus = Capsule::table('tbltickets')->where('id' , $id)->select(['id', 'status' , 'title' , 'tid'])->first();
 		
 		include('setstatus.php');
 		exit;
