@@ -6,7 +6,7 @@ use WHMCS\Database\Capsule;
 use WHMCS\Session;
 use WHMCS\Admin;
 use WHMCS\Carbon;
-
+use WHMCS\Tickets;
 
 /**
  * Sample Admin Area Controller
@@ -343,7 +343,25 @@ class Controller {
 				case 'setstatus':
 				
 					$id = $_POST['id'];
-					echo $id; 
+					$status = $_POST['status'];
+					$oldstatus = $_POST['oldstatus'];
+					
+					//Run The Query to Chnage the 
+					//Capsule::table('tbltickets')->insert(['review_responses_id' => $id ,'admin_id' => $_POST['admin_id'] , 'reviewer_id' => $_POST['reviewer_id'], 'message' => $_POST['message'], 'msgstatus' => 0 , 'created_at' => $today]);
+					
+					if ($status == 'Closed') {
+						closeTicket($id);
+					} else {
+						addTicketLog($id, 'Status changed to ' . $status);
+						update_query('tbltickets', array('status' => $status), array('id' => $id));
+						Tickets::notifyTicketChanges($id, array(
+						'Status' => array('old' => $oldstatus, 'new' => $status),
+						'Who'    => getAdminName(Session::get('adminid'))
+						));
+						run_hook('TicketStatusChange', array('adminid' => Session::get('adminid'), 'status' => $status, 'ticketid' => $id));
+					}
+					
+					header("Location: addonmodules.php?module=review_responses&action=setstatus&id=".$id."&result=success");
 					exit;
 				
 				break;
@@ -517,7 +535,7 @@ class Controller {
 		$tktstatuses = Capsule::table('tblticketstatuses')->get();
 		
 		//Get Ticket Present Status
-		$tktstatus = Capsule::table('tbltickets')->where('id' , $id)->select(['status'])->first();
+		$tktstatus = Capsule::table('tbltickets')->where('id' , $id)->select(['status' , 'title' , 'tid'])->first();
 		
 		include('setstatus.php');
 		exit;

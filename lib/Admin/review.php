@@ -128,7 +128,7 @@
                       <tr>
                           <td class="fieldlabel text-left"></td>
                           <td class="fieldlabel text-left"><?php echo $LANG['review_task_status_qry'] ?>:</td>
-                          <td class="fieldarea text-left"><label class="label label-success"><?php echo $review->ticketstatus; ?></label>&nbsp;<button class="btn btn-sm btn-info" onClick="window.open('addonmodules.php?module=review_responses&action=setstatus&id=<?php echo $review->ticket_id; ?>','setstatuswindow','width=400,height=300,top=100,left=100,scrollbars=yes')">Change Status</button></td>
+                          <td class="fieldarea text-left"><label class="label label-success"><?php echo $review->ticketstatus; ?></label>&nbsp;<button class="btn btn-sm btn-info" onClick="window.open('addonmodules.php?module=review_responses&action=setstatus&id=<?php echo $review->ticket_id; ?>','setstatuswindow','width=600,height=400,top=100,left=100,scrollbars=yes')">Change Status</button></td>
                           <td class="fieldlabel text-left"></td>
                       </tr>
 
@@ -293,7 +293,7 @@
                   <tbody>
                   	
                    <tr>
-                      <td class=" text-left" colspan="4"> <h1><?php echo $LANG['review_msgs_statusonly'] ?><small><i>(Note: These are not associated with any Response from the VA)</i></small></h1></td>
+                      <td class=" text-left" colspan="4"> <h1><?php echo $LANG['review_msgs_statusonly'] ?><small><i> (Note: These are not associated with any Response from the VA)</i></small></h1></td>
                    </tr>	
                   <?php //approved ?>
                   <?php if( count($status_change) > 0): ?> 

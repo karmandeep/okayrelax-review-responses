@@ -49,9 +49,9 @@
       <script type="text/javascript">	
           
 		  //Don't Need this Here Let Them Close this.
-		  //alert('Record Updated Successfully.'); 
-          //window.opener.location.reload(false);
-          //window.close();
+		  alert('Record Updated Successfully.'); 
+          window.opener.location.reload(false);
+          window.close();
           
       </script>
   <?php	
@@ -67,11 +67,12 @@
           <form name="review" action="addonmodules.php?module=review_responses&action=submit" method="post">
               <input type="hidden" name="mode" value="setstatus">
               <input type="hidden" name="id" value="<?php echo $id; ?>">
+              <input type="hidden" name="oldstatus" value="<?php echo $tktstatus->status; ?>">
           
               <table class="form" width="100%" border="0" cellspacing="0" cellpadding="0">
                   <tbody>
                       <tr>
-                          <td class=" text-left" colspan="4"> <h1><?php echo $LANG['review_heading'] ?></h1> </td>
+                          <td class=" text-left" colspan="4"> <h1><?php echo $LANG['review_heading'] ?><small> <a href="#" onClick="window.open('tasks.php?action=view&id=<?php echo $review->ticket_id; ?>');" ><?php echo $tktstatus->tid; ?> - <?php echo $tktstatus->title; ?></a></small></h1></td>
                       </tr>	
                       
 

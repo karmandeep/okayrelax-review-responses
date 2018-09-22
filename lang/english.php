@@ -43,7 +43,7 @@ $_ADDONLANG['task_status_change'] = 'Task Status Change';
 $_ADDONLANG['task_status_approve'] = 'Approve';
 $_ADDONLANG['task_status_reject'] = 'Reject';
 
-$_ADDONLANG['review_msgs_statusonly'] = 'Status Change Request Only';
+$_ADDONLANG['review_msgs_statusonly'] = 'Status Change Request Only By Virtual Assistant';
 
 $_ADDONLANG['review_msgs_status_qry'] = 'Status';
 $_ADDONLANG['review_task_status_qry'] = 'Task Status';
