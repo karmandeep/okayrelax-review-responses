@@ -60,8 +60,11 @@
     <li class="dropdown pull-right tabdrop hide"><a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-align-justify"></i> <b class="caret"></b></a><ul class="dropdown-menu"></ul></li>
     <li class="active"><a class="tab-top" href="#tab1" role="tab" data-toggle="tab" id="tabLink1" data-tab-id="1"><?php echo $LANG['title_general']; ?></a></li>
     <li><a class="tab-top" href="#tab2" role="tab" data-toggle="tab" id="tabLink2" data-tab-id="2"><?php echo $LANG['title_localisation']; ?></a></li>
-    <li><a class="tab-top" href="#tab3" role="tab" data-toggle="tab" id="tabLink3" data-tab-id="3"><?php echo $LANG['title_ordering']; ?></a></li>
-    <li><a class="tab-top" href="#tab4" role="tab" data-toggle="tab" id="tabLink4" data-tab-id="4"><?php echo $LANG['title_review_status']; ?></a></li>
+    <li><a class="tab-top" href="#tab3" role="tab" data-toggle="tab" id="tabLink3" data-tab-id="3"><?php echo $LANG['title_my_reviews']; ?></a></li>
+    <li><a class="tab-top" href="#tab4" role="tab" data-toggle="tab" id="tabLink4" data-tab-id="4"><?php echo $LANG['underreview']; ?></a></li>
+    <li><a class="tab-top" href="#tab5" role="tab" data-toggle="tab" id="tabLink5" data-tab-id="5"><?php echo $LANG['accepted']; ?></a></li>
+    <li><a class="tab-top" href="#tab6" role="tab" data-toggle="tab" id="tabLink6" data-tab-id="6"><?php echo $LANG['rejected']; ?></a></li>
+    <li><a class="tab-top" href="#tab7" role="tab" data-toggle="tab" id="tabLink7" data-tab-id="7"><?php echo $LANG['title_review_status']; ?></a></li>
 </ul>
 
 
@@ -122,8 +125,8 @@
             </thead>
             <tbody>
     
-        <?php if(count($pending)): ?>
-			<?php foreach($pending as $key => $value): ?>            
+        <?php if(count($open)): ?>
+			<?php foreach($open as $key => $value): ?>            
 	        <?php $client_details = getClientsDetails($value->userid); ?>
             	<tr>
                 	<td class="fieldarea text-left" width="30%"><a href="tasks.php?action=view&id=<?php echo $value->ticket_id; ?>" target="_blank"><?php echo $value->tid; ?> - <?php echo substr($value->title , 0 , 50); ?></a></td>
@@ -140,8 +143,107 @@
         </table>
 
   </div>
- 
   <div class="tab-pane" id="tab3">
+  		<table class="display" id="example5" style="font-size:14px;" width="100%" border="0" cellspacing="0" cellpadding="0">
+        	<thead>
+            	<tr>
+                    <th><?php echo $LANG['review_title']; ?></th>
+                    <!--<th><?php echo $LANG['review_message']; ?></th>-->
+                    <th><?php echo $LANG['review_admin']; ?></th>
+                    <th><?php echo $LANG['review_status']; ?></th>
+                    <th><?php echo $LANG['review_customer']; ?></th>
+                    <th><?php echo $LANG['review_reviewer']; ?></th>
+                    <th><?php echo $LANG['review_action']; ?></th>
+                </tr>            
+            </thead>
+            <tbody>
+    
+        <?php if(count($myreviews)): ?>
+			<?php foreach($myreviews as $key => $value): ?>            
+	        <?php $client_details = getClientsDetails($value->userid); ?>
+            	<tr>
+                	<td class="fieldarea text-left" width="30%"><a href="tasks.php?action=view&id=<?php echo $value->ticket_id; ?>" target="_blank"><?php echo $value->tid; ?> - <?php echo substr($value->title , 0 , 50); ?></a></td>
+                	<!--<td class="fieldarea text-left" width="20%"><?php echo substr($value->message, 0 , 50); ?></td>-->
+                	<td class="fieldarea text-left" ><?php echo getAdminName($value->admin_id); ?></td>
+                	<td class="fieldarea text-left"><label class="label <?php if($value->status == 0): ?> label-default <?php elseif($value->status == 1): ?> label-warning <?php elseif($value->status == 2): ?> label-success <?php else: ?> label-danger <?php endif; ?>"><?php echo $this->reviewStatus($value->status); ?></label></td>
+                	<td class="fieldarea text-left text-capitalize"><a href="clientssummary.php?userid=<?php echo $value->userid; ?>" target="_blank"><?php echo $client_details['fullname']; ?></a></td>
+                	<td class="fieldarea text-left"><?php echo ($value->reviewer_id > 0)?getAdminName($value->reviewer_id):'<label class="label label-success">Open</label>'; ?></td>
+            		<td><?php echo $this->reviewButton($value->id); ?></td>
+        		</tr>
+            <?php endforeach; ?>
+        <?php endif; ?>
+			</tbody>        
+        </table>
+  </div>
+  <div class="tab-pane" id="tab4">
+  
+  		<table class="display" id="example1" style="font-size:14px;" width="100%" border="0" cellspacing="0" cellpadding="0">
+        	<thead>
+            	<tr>
+                    <th><?php echo $LANG['review_title']; ?></th>
+                    <!--<th><?php echo $LANG['review_message']; ?></th>-->
+                    <th><?php echo $LANG['review_admin']; ?></th>
+                    <th><?php echo $LANG['review_status']; ?></th>
+                    <th><?php echo $LANG['review_customer']; ?></th>
+                    <!--<th><?php echo $LANG['review_reviewer']; ?></th>-->
+                    <th><?php echo $LANG['review_action']; ?></th>
+                </tr>            
+            </thead>
+            <tbody>
+    
+        <?php if(count($underreview)): ?>
+			<?php foreach($underreview as $key => $value): ?>            
+	        <?php $client_details = getClientsDetails($value->userid); ?>
+            	<tr>
+                	<td class="fieldarea text-left" width="30%"><a href="tasks.php?action=view&id=<?php echo $value->ticket_id; ?>" target="_blank"><?php echo $value->tid; ?> - <?php echo substr($value->title , 0 , 50); ?></a></td>
+                	<!--<td class="fieldarea text-left" width="20%"><?php echo substr($value->message, 0 , 50); ?></td>-->
+                	<td class="fieldarea text-left" ><?php echo getAdminName($value->admin_id); ?></td>
+                	<td class="fieldarea text-left"><label class="label <?php if($value->status == 0): ?> label-default <?php elseif($value->status == 1): ?> label-warning <?php elseif($value->status == 2): ?> label-success <?php else: ?> label-danger <?php endif; ?>"><?php echo $this->reviewStatus($value->status); ?></label></td>
+                	<td class="fieldarea text-left text-capitalize"><a href="clientssummary.php?userid=<?php echo $value->userid; ?>" target="_blank"><?php echo $client_details['fullname']; ?></a></td>
+                	<!--<td class="fieldarea text-left"><?php echo ($value->reviewer_id > 0)?getAdminName($value->reviewer_id):'<label class="label label-success">Open</label>'; ?></td>-->
+            		<td><?php echo $this->reviewButton($value->id); ?></td>
+        		</tr>
+            <?php endforeach; ?>
+        <?php endif; ?>
+			</tbody>        
+        </table>
+  
+  </div>
+  <div class="tab-pane" id="tab5">
+
+		<table class="display" id="example0" style="font-size:14px;" width="100%" border="0" cellspacing="0" cellpadding="0">
+        	<thead>
+            	<tr>
+                    <th><?php echo $LANG['review_title']; ?></th>
+                    <!--<th><?php echo $LANG['review_message']; ?></th>-->
+                    <th><?php echo $LANG['review_admin']; ?></th>
+                    <th><?php echo $LANG['review_status']; ?></th>
+                    <th><?php echo $LANG['review_customer']; ?></th>
+                    <!--<th><?php echo $LANG['review_reviewer']; ?></th>-->
+                    <th><?php echo $LANG['review_action']; ?></th>
+                </tr>            
+            </thead>
+            <tbody>
+    
+        <?php if(count($accepted)): ?>
+			<?php foreach($accepted as $key => $value): ?>            
+	        <?php $client_details = getClientsDetails($value->userid); ?>
+            	<tr>
+                	<td class="fieldarea text-left" width="30%"><a href="tasks.php?action=view&id=<?php echo $value->ticket_id; ?>" target="_blank"><?php echo $value->tid; ?> - <?php echo substr($value->title , 0 , 50); ?></a></td>
+                	<!--<td class="fieldarea text-left" width="20%"><?php echo substr($value->message, 0 , 50); ?></td>-->
+                	<td class="fieldarea text-left" ><?php echo getAdminName($value->admin_id); ?></td>
+                	<td class="fieldarea text-left"><label class="label <?php if($value->status == 0): ?> label-default <?php elseif($value->status == 1): ?> label-warning <?php elseif($value->status == 2): ?> label-success <?php else: ?> label-danger <?php endif; ?>"><?php echo $this->reviewStatus($value->status); ?></label></td>
+                	<td class="fieldarea text-left text-capitalize"><a href="clientssummary.php?userid=<?php echo $value->userid; ?>" target="_blank"><?php echo $client_details['fullname']; ?></a></td>
+                	<!--<td class="fieldarea text-left"><?php echo ($value->reviewer_id > 0)?getAdminName($value->reviewer_id):'<label class="label label-success">Open</label>'; ?></td>-->
+            		<td><?php echo $this->reviewButton($value->id); ?></td>
+        		</tr>
+            <?php endforeach; ?>
+        <?php endif; ?>
+			</tbody>        
+        </table>
+  </div>
+ 
+  <div class="tab-pane" id="tab6">
 
         <table class="display" id="example3" style="font-size:14px;" width="100%" border="0" cellspacing="0" cellpadding="0">
         	<thead>
@@ -157,8 +259,8 @@
             </thead>
             <tbody>
     
-        <?php if(count($myreview)): ?>
-			<?php foreach($myreview as $key => $value): ?>            
+        <?php if(count($rejected)): ?>
+			<?php foreach($rejected as $key => $value): ?>            
 	        <?php $client_details = getClientsDetails($value->userid); ?>
             	<tr>
                 	<td class="fieldarea text-left" width="30%"><a href="tasks.php?action=view&id=<?php echo $value->ticket_id; ?>" target="_blank"><?php echo $value->tid; ?> - <?php echo substr($value->title , 0 , 50); ?></a></td>
@@ -176,7 +278,7 @@
 
   </div>
   
-  <div class="tab-pane" id="tab4">  
+  <div class="tab-pane" id="tab7">  
     
     	<table class="display" id="example4" style="font-size:14px;" width="100%" border="0" cellspacing="0" cellpadding="0">
         	<thead>

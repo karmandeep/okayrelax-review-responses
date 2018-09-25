@@ -236,7 +236,7 @@
                   <tbody>
                   
                    <tr>
-                        <td class=" text-left" colspan="4"> <h1><?php echo $LANG['review_msgs'] ?></h1> </td>
+                        <td class=" text-left" colspan="4"> <h1><?php echo $LANG['review_msgs'] ?> <button class="btn btn-info" onClick="window.open('addonmodules.php?module=review_responses&action=addresponse&id=<?php echo $review->ticket_id; ?>','addresponsewindow','width=1200,height=900,top=50,left=50,scrollbars=yes')">Add New Response</button></h1> </td>
                    </tr>	
 				   <?php if(count($messages) > 0): ?>
                    <?php foreach($messages as $key => $value): ?>                       

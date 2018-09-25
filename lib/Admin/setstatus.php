@@ -12,12 +12,12 @@
    
   <script type="text/javascript">
   
-  	<?php if($review->status == 1): ?>
+  	<?php /*if($review->status == 1): ?>
 	   window.opener.location.reload(false);	
   	<?php endif; ?>
 	<?php if($messages[(count($messages) - 1)]->msgstatus == 0): ?>
 	   window.opener.location.reload(false);	
-  	<?php endif; ?>
+  	<?php endif;*/ ?>
 	
       function checkForm(Form) {
           
@@ -72,7 +72,7 @@
               <table class="form" width="100%" border="0" cellspacing="0" cellpadding="0">
                   <tbody>
                       <tr>
-                          <td class=" text-left" colspan="4"> <h1><?php echo $LANG['review_heading'] ?><small> <a href="#" onClick="window.open('tasks.php?action=view&id=<?php echo $tktstatus->id; ?>');" ><?php echo $tktstatus->tid; ?> - <?php echo $tktstatus->title; ?></a></small></h1></td>
+                          <td class=" text-left" colspan="4"> <h1><?php echo $LANG['review_task_status_set'] ?><small> <a href="#" onClick="window.open('tasks.php?action=view&id=<?php echo $tktstatus->id; ?>');" ><?php echo $tktstatus->tid; ?> - <?php echo $tktstatus->title; ?></a></small></h1></td>
                       </tr>	
                       
 

@@ -6,9 +6,10 @@
  
  
 $_ADDONLANG['title_general'] = "All";
-$_ADDONLANG['title_localisation'] = "Open Reviews";
-$_ADDONLANG['title_underreview'] = "Under Review";
-$_ADDONLANG['title_ordering'] = "Responses being Reviewed by me"; //As a VA
+$_ADDONLANG['title_my_reviews'] = "My Reviews";
+$_ADDONLANG['title_localisation'] = "Open";
+$_ADDONLANG['title_underreview'] = "Under-Review";
+$_ADDONLANG['title_ordering'] = "Under-Review"; //As a VA
 $_ADDONLANG['title_review_status'] = 'Review Ticket Status';
 
 //Listing page
@@ -43,8 +44,18 @@ $_ADDONLANG['task_status_change'] = 'Task Status Change';
 $_ADDONLANG['task_status_approve'] = 'Approve';
 $_ADDONLANG['task_status_reject'] = 'Reject';
 
-$_ADDONLANG['review_msgs_statusonly'] = 'Status Change Request Only By Virtual Assistant';
+$_ADDONLANG['review_msgs_statusonly'] = 'Standalone Status Change Request Only By Virtual Assistant';
 
 $_ADDONLANG['review_msgs_status_qry'] = 'Status';
 $_ADDONLANG['review_task_status_qry'] = 'Task Status';
+$_ADDONLANG['review_task_status_set'] = 'Set Status';
+
+
+$_ADDONLANG['review_task_response_add'] = 'Add Reply';
+$_ADDONLANG['review_task_response_add_attachment'] = 'Add Attachment';
+
+//ReplyWIndow
+$_ADDONLANG['review_task_setDepartment'] = "Set Department";
+$_ADDONLANG['review_task_setAssignment'] = "Set Assignment";
+$_ADDONLANG['review_task_setPriority'] = "Set Priority";
 

@@ -395,7 +395,23 @@ add_hook('AdminAreaPage', 1, function($vars) {
 		exit;
 	}
 	
+});
+
+add_hook('AdminAreaHeaderOutput', 1, function($vars) {
+
+
+	//First Check WHose Logged in
 	
+	// Perform hook code here...
+	$admin_id = Admin::getAdminID();
+	
+	//echo 1234;
+	// Role ID...
+	$role_id_qry = Capsule::table('tbladmins')->where('id' , $admin_id)->select(['tbladmins.roleid as roleid'])->first();
+	//Role ID;
+	$role_id = $role_id_qry->roleid;
+	
+	$return = '';	
 	//Get how many new replies
 	//if you are a virtual assistant
 	//Then this should display how many of their responses are
@@ -410,9 +426,116 @@ add_hook('AdminAreaPage', 1, function($vars) {
 	//$extraTemplateVariables['review_replies'] = 'This is a Test';
 	
     //return $extraTemplateVariables;
+	//0 Unpubliched
+	//1 Under Review
+	//2 Accepted
+	//3 Rejected
+	//If this is a VA
+	if($role_id === 3){
+		//echo 'VA';	
+		//This is VA
+		$data = Capsule::table('review_responses')->where('admin_id' , $admin_id)->orderBy('status' , 'asc')->get();
+		
+		$grouped_array = [];
+		
+		if(count($data)):
+			foreach($data as $key => $value):
+				$grouped_array[$value->status][] = $value;
+			endforeach;
+		endif;
+		
+		$messages_cnt = Capsule::table('review_responses_replies')
+							->join('review_responses', 'review_responses.id', '=', 'review_responses_replies.review_responses_id' )
+							->where('review_responses.admin_id' , $admin_id)
+							->where('review_responses_replies.msgstatus' , 0)
+							->where('review_responses_replies.admin_id' , 0)
+							->count();
+		
+		
+		
+		$return = '<div class="margin-10">';
+		$return .= 'You Have: <a href="addonmodules.php?module=my_referral#tab=1"><strong>Open</strong> (' . count($grouped_array[0]) .')</a> 
+		| <a href="addonmodules.php?module=my_referral#tab=2"><strong>Under-Review</strong> (' . count($grouped_array[1]) .')</a> 
+		| <a href="addonmodules.php?module=my_referral#tab=3"><strong>Accepted</strong> (' . count($grouped_array[2]) .')</a> 
+		| <a href="addonmodules.php?module=my_referral#tab=4"><strong>Rejected</strong> (' . count($grouped_array[3]) .')</a> 
+		Responses and have <a href="addonmodules.php?module=my_referral#tab=0"> <strong>Unread Messeges</strong> ('. $messages_cnt .') </a>';
+		$return .= '</div>';
+		
+	} else {
+		//echo 'Reviewer';
+		//This are Others
+		$data = Capsule::table('review_responses')->where('reviewer_id' , $admin_id)->get();
+
+		$grouped_array = [];
+		
+		if(count($data)):
+			foreach($data as $key => $value):
+				$grouped_array[$value->status][] = $value;
+			endforeach;
+		endif;
+
+		$messages_cnt = Capsule::table('review_responses_replies')
+							->join('review_responses', 'review_responses.id', '=', 'review_responses_replies.review_responses_id' )
+							->where('review_responses.reviewer_id' , $admin_id)
+							->where('review_responses_replies.msgstatus' , 0)
+							->where('review_responses_replies.reviewer_id' , 0)
+							->count();
+							
+		$open = Capsule::table('review_responses')->where('reviewer_id' , 0)->where('status' , 0)->count();
+		
+		$return = '<div class="margin-10">';
+		$return .= 'You Have: <a href="addonmodules.php?module=review_responses#tab=2"><strong>Open</strong> (' . $open .')</a> 
+		| <a href="addonmodules.php?module=review_responses#tab=4"><strong>Under-Review</strong> (' . count($grouped_array[1]) .')</a> 
+		| <a href="addonmodules.php?module=review_responses#tab=5"><strong>Accepted</strong> (' . count($grouped_array[2]) .')</a> 
+		| <a href="addonmodules.php?module=review_responses#tab=6"><strong>Rejected</strong> (' . count($grouped_array[3]) .')</a> 
+		Responses and have <a href="addonmodules.php?module=review_responses#tab=3"> <strong>Unread Messeges</strong> ('. $messages_cnt .') </a>';
+		$return .= '</div>';
+
+
+	}
+
+	//echo $vars['filename'] ;
+	if($vars['filename'] === 'supportcenter' || $vars['filename'] === 'tasks' || $vars['filename'] === 'index'):
+		 return '<div class="alert alert-warning global-admin-warning" style="margin:0;" >' . $return . '</div>';
+	endif;
+	
+    //return '<div class="alert alert-warning global-admin-warning" style="margin:0;" >' . $return . '</div>';
+});
+//When the Ticket Deleted Remove the Associated Reviews / Replies / Status request as well as Logs to Save the Database. 
+
+add_hook('TicketDelete', 1, function($vars) {
+    // Perform hook code here...
+	
+	$ticketId = $vars['ticketId'];
+	
+	$get_review_responses = Capsule::table("review_responses")->where("review_responses.tid", $ticketId)->first();
+	
+	Capsule::table("review_responses")
+		//->join('review_responses_replies', 'review_responses.id', '=', 'review_responses_replies.review_responses_id' )
+        ->where("review_responses.tid", $ticketId)
+        ->delete();
+
+	Capsule::table("review_responses_replies")
+		//->join('review_responses_replies', 'review_responses.id', '=', 'review_responses_replies.review_responses_id' )
+        ->where("review_responses_replies.review_responses_id", $get_review_responses->id)
+        ->delete();
+
+
+	Capsule::table("review_responses_ticket_status_log")
+		//->join('review_responses_replies', 'review_responses.id', '=', 'review_responses_replies.review_responses_id' )
+        ->where("review_responses_ticket_status_log.ticketid", $ticketId)
+        ->delete();
+
+	Capsule::table("review_responses_ticket_status_request")
+		//->join('review_responses_replies', 'review_responses.id', '=', 'review_responses_replies.review_responses_id' )
+        ->where("review_responses_ticket_status_request.ticketid", $ticketId)
+        ->delete();
+	
 });
 
-
+add_hook('TicketDeleteReply', 1, function($vars) {
+    // Perform hook code here...
+});
 
 add_hook('AdminAreaHeadOutput', 1, function($vars) {
 
@@ -433,20 +556,23 @@ add_hook('AdminAreaHeadOutput', 1, function($vars) {
     
     	$(document).ready(function() {
 			
-			
+			$('#example0').DataTable({
+        		"order": [[ 4, "desc" ]],
+				"pageLength": 50
+    		});
     		$('#example').DataTable({
         		"order": [[ 2, "desc" ]],
 				"pageLength": 50
     		});
     		$('#example1').DataTable({
-        		"order": [[ 4, "desc" ]],
+        		"order": [[ 2, "desc" ]],
 				"pageLength": 50
     		});
     		$('#example2').DataTable({
 				"pageLength": 50	
 			});
     		$('#example3').DataTable({
-        		"order": [[ 4, "desc" ]],
+        		"order": [[ 2, "desc" ]],
 				"pageLength": 50
     		});
 			
@@ -454,7 +580,11 @@ add_hook('AdminAreaHeadOutput', 1, function($vars) {
         		"order": [[ 4, "desc" ]],
 				"pageLength": 50
     		});
-
+			
+			$('#example5').DataTable({
+        		"order": [[ 2, "desc" ]],
+				"pageLength": 50
+    		});
 
 		 
 		 

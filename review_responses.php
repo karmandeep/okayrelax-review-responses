@@ -60,7 +60,7 @@ function review_responses_config()
         'description' => 'Review Task responses before client sees them, This Module is for the management to review the Assistant Responses', // Description displayed within the admin interface
         'author' => 'Karmandeep Singh', // Module author name
         'language' => 'english', // Default language
-        'version' => '1.0', // Version number
+        'version' => '1.1', // Version number
         'fields' => array()
     );
 }

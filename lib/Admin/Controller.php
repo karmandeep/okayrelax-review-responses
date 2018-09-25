@@ -43,7 +43,7 @@ class Controller {
 						->join('tblticketreplies', 'tblticketreplies.id', '=', 'review_responses.ticket_replies_id')
 						//->where('tblticketreplies.tid', 'tbltickets.id')
 						//->where('mod_servermonitoring_services.uid', $userid)
-						->where('review_responses.admin_id', '!=', 0)
+						//->where('review_responses.admin_id', '!=', 0)
 						->where('review_responses.admin_id', '!=', $reviewer_id)
 						->select('tbltickets.tid as tid' , 'tbltickets.title as title' , 'tblticketreplies.message as message' ,
 								 'review_responses.id as id' , 'review_responses.admin_id as admin_id' ,
@@ -51,34 +51,14 @@ class Controller {
 								 'review_responses.status as status' , 'review_responses.userid as userid' ,
 								 'review_responses.reviewer_id as reviewer_id')
 						->get();
-		
-
-		//Pending, Where There is No Reviewer
-		$pending = Capsule::table('review_responses')
-							->join('tbltickets', 'tbltickets.id', '=', 'review_responses.tid')
-							->join('tblticketreplies', 'tblticketreplies.id', '=', 'review_responses.ticket_replies_id')
-							//->where('tblticketreplies.tid', 'tbltickets.id')
-							//->where('mod_servermonitoring_services.uid', $userid)
-							->where('review_responses.admin_id', '!=', 0)
-							->where('review_responses.admin_id', '!=', $reviewer_id)
-							->where('review_responses.reviewer_id', 0)
-							->select('tbltickets.tid as tid' , 'tbltickets.title as title' , 'tblticketreplies.message as message' ,
-									 'review_responses.id as id' , 'review_responses.admin_id as admin_id' ,
-									 'review_responses.tid as ticket_id' , 'review_responses.ticket_replies_id as ticket_response_id' , 
-									 'review_responses.status as status' , 'review_responses.userid as userid' ,
-									 'review_responses.reviewer_id as reviewer_id')
-							->get();
-		
-		
-
 
 		//Reviews of the Currently Logged in Reviewer
-		$myreview = Capsule::table('review_responses')
+		$myreviews = Capsule::table('review_responses')
 							->join('tbltickets', 'tbltickets.id', '=', 'review_responses.tid')
 							->join('tblticketreplies', 'tblticketreplies.id', '=', 'review_responses.ticket_replies_id')
 							//->where('tblticketreplies.tid', 'tbltickets.id')
 							//->where('mod_servermonitoring_services.uid', $userid)
-							->where('review_responses.admin_id', '!=', 0)
+							//->where('review_responses.admin_id', '!=', 0)
 							->where('review_responses.admin_id', '!=', $reviewer_id)
 							->where('review_responses.reviewer_id', $reviewer_id)
 							->select('tbltickets.tid as tid' , 'tbltickets.title as title' , 'tblticketreplies.message as message' ,
@@ -87,6 +67,77 @@ class Controller {
 									 'review_responses.status as status' , 'review_responses.userid as userid' ,
 									 'review_responses.reviewer_id as reviewer_id')
 							->get();
+		
+
+		//Open, Where There is No Reviewer
+		$open = Capsule::table('review_responses')
+							->join('tbltickets', 'tbltickets.id', '=', 'review_responses.tid')
+							->join('tblticketreplies', 'tblticketreplies.id', '=', 'review_responses.ticket_replies_id')
+							//->where('tblticketreplies.tid', 'tbltickets.id')
+							//->where('mod_servermonitoring_services.uid', $userid)
+							//->where('review_responses.admin_id', '!=', 0)
+							->where('review_responses.admin_id', '!=', $reviewer_id)
+							->where('review_responses.reviewer_id', 0)
+							->where('review_responses.status', 0)
+							->select('tbltickets.tid as tid' , 'tbltickets.title as title' , 'tblticketreplies.message as message' ,
+									 'review_responses.id as id' , 'review_responses.admin_id as admin_id' ,
+									 'review_responses.tid as ticket_id' , 'review_responses.ticket_replies_id as ticket_response_id' , 
+									 'review_responses.status as status' , 'review_responses.userid as userid' ,
+									 'review_responses.reviewer_id as reviewer_id')
+							->get();
+		
+		//under-review
+		$underreview = Capsule::table('review_responses')
+							->join('tbltickets', 'tbltickets.id', '=', 'review_responses.tid')
+							->join('tblticketreplies', 'tblticketreplies.id', '=', 'review_responses.ticket_replies_id')
+							//->where('tblticketreplies.tid', 'tbltickets.id')
+							//->where('mod_servermonitoring_services.uid', $userid)
+							//->where('review_responses.admin_id', '!=', 0)
+							->where('review_responses.admin_id', '!=', $reviewer_id)
+							->where('review_responses.reviewer_id', $reviewer_id)
+							->where('review_responses.status', 1)
+							->select('tbltickets.tid as tid' , 'tbltickets.title as title' , 'tblticketreplies.message as message' ,
+									 'review_responses.id as id' , 'review_responses.admin_id as admin_id' ,
+									 'review_responses.tid as ticket_id' , 'review_responses.ticket_replies_id as ticket_response_id' , 
+									 'review_responses.status as status' , 'review_responses.userid as userid' ,
+									 'review_responses.reviewer_id as reviewer_id')
+							->get();
+
+
+		//accepted
+		$accepted = Capsule::table('review_responses')
+							->join('tbltickets', 'tbltickets.id', '=', 'review_responses.tid')
+							->join('tblticketreplies', 'tblticketreplies.id', '=', 'review_responses.ticket_replies_id')
+							//->where('tblticketreplies.tid', 'tbltickets.id')
+							//->where('mod_servermonitoring_services.uid', $userid)
+							//->where('review_responses.admin_id', '!=', 0)
+							->where('review_responses.admin_id', '!=', $reviewer_id)
+							->where('review_responses.reviewer_id', $reviewer_id)
+							->where('review_responses.status', 2)
+							->select('tbltickets.tid as tid' , 'tbltickets.title as title' , 'tblticketreplies.message as message' ,
+									 'review_responses.id as id' , 'review_responses.admin_id as admin_id' ,
+									 'review_responses.tid as ticket_id' , 'review_responses.ticket_replies_id as ticket_response_id' , 
+									 'review_responses.status as status' , 'review_responses.userid as userid' ,
+									 'review_responses.reviewer_id as reviewer_id')
+							->get();
+
+		//rejected
+		$rejected = Capsule::table('review_responses')
+							->join('tbltickets', 'tbltickets.id', '=', 'review_responses.tid')
+							->join('tblticketreplies', 'tblticketreplies.id', '=', 'review_responses.ticket_replies_id')
+							//->where('tblticketreplies.tid', 'tbltickets.id')
+							//->where('mod_servermonitoring_services.uid', $userid)
+							//->where('review_responses.admin_id', '!=', 0)
+							->where('review_responses.admin_id', '!=', $reviewer_id)
+							->where('review_responses.reviewer_id', $reviewer_id)
+							->where('review_responses.status', 3)
+							->select('tbltickets.tid as tid' , 'tbltickets.title as title' , 'tblticketreplies.message as message' ,
+									 'review_responses.id as id' , 'review_responses.admin_id as admin_id' ,
+									 'review_responses.tid as ticket_id' , 'review_responses.ticket_replies_id as ticket_response_id' , 
+									 'review_responses.status as status' , 'review_responses.userid as userid' ,
+									 'review_responses.reviewer_id as reviewer_id')
+							->get();
+
 
 
 		//Ticket Status Query:
@@ -275,6 +326,7 @@ class Controller {
 		
 		require ROOTDIR . '/includes/ticketfunctions.php';
 
+		$adminid = Admin::getAdminID();
 		
 		 if(isset($_POST['mode'])) {
 		 
@@ -325,9 +377,11 @@ class Controller {
 					//Capsule::table('review_responses_ticket_status_request')->where('review_responses_id' , $id)->update(['status' => $_POST['status'] , 'notes' => $_POST['notes'] , 'updated_at' => $today]);
 					header("Location: addonmodules.php?module=review_responses&action=".$mode."&id=".$id."&result=success");
 					exit;
+					
 				break;
 
 				case 'sendmessage':
+				
 					$id = $_POST['id'];
 					Capsule::table('review_responses_replies')->insert(['review_responses_id' => $id ,'admin_id' => $_POST['admin_id'] , 'reviewer_id' => $_POST['reviewer_id'], 'message' => $_POST['message'], 'msgstatus' => 0 , 'created_at' => $today]);
 					if($_POST['admin_id'] > 0) {
@@ -364,6 +418,20 @@ class Controller {
 					header("Location: addonmodules.php?module=review_responses&action=setstatus&id=".$id."&result=success");
 					exit;
 				
+				break;
+				
+				
+				case 'addresponse':
+					
+					$id = $_POST['id'];
+					//AddTicketReply
+					$tkt = localAPI('AddTicketReply', ['ticketid' => $id, 
+													   'message' => $_POST['message'],
+													   'adminusername' => getAdminName($adminid),
+													   'status' => $_POST['status']]);
+								
+					header("Location: addonmodules.php?module=review_responses&action=addresponse&id=".$id."&result=success");
+					exit;
 				break;
 				
 				default:
@@ -538,6 +606,57 @@ class Controller {
 		$tktstatus = Capsule::table('tbltickets')->where('id' , $id)->select(['id', 'status' , 'title' , 'tid'])->first();
 		
 		include('setstatus.php');
+		exit;
+	}
+
+	/**
+     * Show view.
+     *
+     * @param array $vars Module configuration parameters
+     *
+     * @return string
+     */
+	public function addresponse($vars) {
+		
+        $modulelink = $vars['modulelink']; // eg. addonmodules.php?module=addonmodule
+        $version = $vars['version']; // eg. 1.0
+        $LANG = $vars['_lang']; // an array of the currently loaded language variables
+        //$LANG = $vars['_lang']; // an array of the currently loaded language variables
+
+		
+		//This is the Ticket ID
+		$id = $_GET['id'];
+		$adminId = Admin::getAdminID();
+		$signature = '';
+		//Get the Ticket:
+		$tkt = localAPI('GetTicket', ['ticketid' => $id]);
+		//$sprtdepts = localAPI('GetSupportDepartments');
+		//Admin List
+		$listadmin = localAPI('customcall',['method' => 'listadmin']);
+		if(count($listadmin['admins']['admin'])):
+			foreach($listadmin['admins']['admin'] as $key => $value):
+				if($adminId === $value->id): 
+					$signature = $value->signature;
+				endif;
+			endforeach;
+		endif;		
+		
+		//echo '<pre>';
+		
+		//print_r($tkt);
+		//GetSupportDepartments
+		//tblticketstatuses
+		$tktstatuses = Capsule::table('tblticketstatuses')->get();
+		//Get Ticket Present Status
+		//$tktstatus = Capsule::table('tbltickets')->where('id' , $id)->select(['id', 'status' , 'title' , 'tid'])->first();
+		
+		//echo $adminId;
+		//echo '<pre>';
+		//print_r(array_search($adminId , $listadmin));
+		//print_r($listadmin['admins']['admin']);
+		//exit;
+		
+		include('addresponse.php');
 		exit;
 	}
 
