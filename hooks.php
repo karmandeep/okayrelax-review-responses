@@ -520,7 +520,6 @@ add_hook('TicketDelete', 1, function($vars) {
         ->where("review_responses_replies.review_responses_id", $get_review_responses->id)
         ->delete();
 
-
 	Capsule::table("review_responses_ticket_status_log")
 		//->join('review_responses_replies', 'review_responses.id', '=', 'review_responses_replies.review_responses_id' )
         ->where("review_responses_ticket_status_log.ticketid", $ticketId)
@@ -535,6 +534,30 @@ add_hook('TicketDelete', 1, function($vars) {
 
 add_hook('TicketDeleteReply', 1, function($vars) {
     // Perform hook code here...
+	
+		$ticketId = $vars['ticketId'];
+		
+		$replyId = $vars['replyId'];
+
+		$get_review_responses = Capsule::table("review_responses")->where("review_responses.ticket_replies_id", $replyId)->first();
+
+		Capsule::table("review_responses")
+			//->join('review_responses_replies', 'review_responses.id', '=', 'review_responses_replies.review_responses_id' )
+			->where("review_responses.ticket_replies_id", $replyId)
+			->delete();
+		
+		Capsule::table("review_responses_replies")
+			//->join('review_responses_replies', 'review_responses.id', '=', 'review_responses_replies.review_responses_id' )
+			->where("review_responses_replies.review_responses_id", $get_review_responses->id)
+			->delete();
+		
+		Capsule::table("review_responses_ticket_status_request")
+			//->join('review_responses_replies', 'review_responses.id', '=', 'review_responses_replies.review_responses_id' )
+			->where("review_responses_ticket_status_request.review_responses_id", $get_review_responses->id)
+			->delete();
+
+		
+	
 });
 
 add_hook('AdminAreaHeadOutput', 1, function($vars) {
